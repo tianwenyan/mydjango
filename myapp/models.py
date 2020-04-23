@@ -26,7 +26,7 @@ class User(Base):
     type = models.IntegerField(default=0,null=0)
 
     # 手机号
-    phone = models.IntegerField()
+    phone = models.CharField(max_length=200)
 
     # 个人主页统计
     num = models.IntegerField(default=0,null=True)

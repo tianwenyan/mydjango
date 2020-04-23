@@ -51,6 +51,15 @@ from dwebsocket.decorators import accept_websocket
 import uuid
 
 from myapp.models import User
+import re
+
+def is_phone(phone):
+    phone_pat = re.compile('^(13\d|14[5|7]|15\d|166|17[3|6|7]|18\d)\d{8}$')
+    res = re.search(phone_pat, phone)
+    if not res:
+        return False
+    return True
+
 
 # md5加密方法
 def make_password(mypass):
@@ -66,27 +75,34 @@ def make_password(mypass):
     # 返回密文
     return md5.hexdigest()
 
-##注册接口
+
+#注册模块
 class Register(APIView):
 
 	def get(self,request):
 
-		#接收参数
-		username = request.GET.get('username',None)
-		password = request.GET.get('password',None)
+		#接收参数  dict['username']
+		username = request.GET.get('username','null')
+		password = request.GET.get('password','null')
+		phone = request.GET.get('phone','null')
 
-		#排重操作
+        
+		
+		#排重
 		user = User.objects.filter(username=username).first()
 
 		if user:
-			return Response({'code':403,'message':'该用户名已经存在'})
+			res = {}
+			res['code'] = 405
+			res['message'] = '该用户名已存在'
+			return Response(res)
 
 		#入库
-		user = User(username=username,password=make_password(password))
-
-		#保存结果
+		user = User(username=username,password=make_password(password),phone=is_phone(phone))
 		user.save()
 
-		return Response({'code':200,'message':'恭喜注册成功'})
+		res = {}
+		res['code'] = 200
+		res['message'] = '恭喜，注册成功'
 
-	
+		return Response(res)
