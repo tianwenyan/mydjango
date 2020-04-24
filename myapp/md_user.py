@@ -76,6 +76,25 @@ def make_password(mypass):
     return md5.hexdigest()
 
 
+
+# 登陆接口
+class Login(APIView):
+	def get(self,request):
+
+		# 接收参数 
+		username = request.GET.get('username',None)
+		password = request.GET.get('password',None)
+
+		# 查询数据
+		user = User.objects.filter(username=username,password=make_password(password)).first()
+
+		if user:
+			return Response({'code':200,'message':'登陆成功','uid':user.id,'username':user.username})
+		
+		else:
+			return Response({'code':403,'message':'您的用户名或密码错误,请重新输入'})
+
+
 #注册模块
 class Register(APIView):
 
@@ -106,3 +125,4 @@ class Register(APIView):
 		res['message'] = '恭喜，注册成功'
 
 		return Response(res)
+ 
