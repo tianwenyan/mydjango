@@ -18,11 +18,14 @@ from django.urls import path,re_path
 from django.views.static import serve
 from myapp.views import myindex
 from myapp.md_user import Register,Login
+from myapp.my_user1 import Register1,Login1
 
 urlpatterns = [
     #定义超链接路由
     re_path('^static/upload/(?P<path>.*)$',serve,{'document_root':'/static/upload/'}),
     path('',myindex),
     path('register/',Register.as_view()),
-    path('login/',Login.as_view())
+    path('login/',Login.as_view()),
+    path('register1/',Register1.as_view()),
+    path('login1/',Login1.as_view())
 ]
