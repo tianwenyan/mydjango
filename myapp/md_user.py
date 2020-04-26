@@ -114,6 +114,9 @@ class MyCode(View):
 		image.save(buf,'png')
 		#保存随机码
 		r.set('code',code_str)
+
+		# 保存到session
+		request.session['code'] = code_str
 		print(r.get('code'))
 
 		return HttpResponse(buf.getvalue(),'image/png')
@@ -145,6 +148,21 @@ class Login(APIView):
 		# 接收参数 
 		username = request.GET.get('username',None)
 		password = request.GET.get('password',None)
+		code = request.GET.get('code',None)
+
+		# 比对验证码
+		redis_code = r.get('code')
+		# 转码 str(redis_code,'utf-8')
+		redis_code = redis_code.decode('utf-8')
+
+		# 从而session中取值
+		# session_code = request.session.get('code',None)
+		# print(session_code)
+
+		
+
+		if code != redis_code:
+			return Response({'code':403,'message':'您输入的验证码错误'})
 
 		# 查询数据
 		user = User.objects.filter(username=username,password=make_password(password)).first()
