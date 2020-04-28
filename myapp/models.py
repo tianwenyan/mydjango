@@ -22,7 +22,7 @@ class User(Base):
     # 头像
     img = models.CharField(max_length=200)
 
-    #用户类别 0普通用户 1超级管理员 2.网站编辑
+    #用户类别 0普通用户 1超级管理员 2.网站编辑 3.新浪
     type = models.IntegerField(default=0,null=0)
 
     # 手机号

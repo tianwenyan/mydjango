@@ -70,6 +70,53 @@ port = 6379
 r = redis.Redis(host=host,port=port)
 
 
+# 建立新浪回调方法
+def wb_back(request):
+	#接收参数
+	code = request.GET.get('code',None)
+
+	#定义token接口地址
+	url = "https://api.weibo.com/oauth2/access_token"
+
+	#定义参数
+	re = requests.post(url,data={
+		"client_id":"3827484432",
+		"client_secret":"f5fa4db6fe4e90878be6838c5aabf845",
+		"grant_type":"authorization_code",
+		"code":code,
+		"redirect_uri":"http://127.0.0.1:8000/md_admin/weibo"
+	})
+
+	print(re.json())
+
+	# 换取新浪微博用户昵称
+	res = requests.get('https://api.weibo.com/2/users/show.json',params={'access_token':re.json()['access_token'],'uid':re.json()['uid']})
+	print(res.json())
+
+	sina_id = ''
+	user_id = ''
+
+	#判断是否用新浪微博登录过
+	user = User.objects.filter(username=str(res.json()['name'])).first()
+
+	if user:
+		#代表曾经用该账号登录过
+		sina_id = user.username
+		user_id = user.id
+	else:
+		#首次登录，入库新浪微博账号
+		user = User(username=str(res.json()['name']),password='')
+		user.save()
+		user = User.objects.filter(username=str(res.json()['name'])).first()
+		sina_id = user.username
+		user_id = user.id
+
+	print(sina_id,user_id)
+	#重定向
+	return redirect("http://localhost:8080?sina_id="+str(sina_id)+"&uid="+str(user_id))
+
+
+	return HttpResponse('回调成功')
 
 
 

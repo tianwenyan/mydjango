@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path,re_path
 from django.views.static import serve
 from myapp.views import myindex
-from myapp.md_user import Register,Login,MyCode
+from myapp.md_user import Register,Login,MyCode,wb_back
 from myapp.my_user1 import Register1,Login1
 
 urlpatterns = [
@@ -29,5 +29,6 @@ urlpatterns = [
     path('register1/',Register1.as_view()),
     path('login1/',Login1.as_view()),
     path('mycode/',MyCode.as_view()),
+    path('md_admin/weibo',wb_back),
 
 ]

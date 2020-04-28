@@ -9,7 +9,7 @@ browser = webdriver.Chrome("c:/Users/liuyue/www/chromedriver.exe")
 browser.get('http://localhost:8080/login')
 
 #群体选择器
-browser.find_elements_by_tag_name('input')[1].send_keys('liuyue')
+browser.find_elements_by_tag_name('input')[1].send_keys('123')
 browser.find_elements_by_tag_name('input')[2].send_keys('123')
 
 #进行拖动操作
