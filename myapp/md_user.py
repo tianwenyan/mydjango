@@ -70,6 +70,29 @@ port = 6379
 r = redis.Redis(host=host,port=port)
 
 
+# 文件上传通用类
+class UploadFile(APIView):
+	def post(self,request):
+
+		# 接收参数
+		myfile = request.FILES.get('file')
+
+		
+		
+		# 建立文件流对象 定义写文件路径
+		f = open(os.path.join(UPLOAD_ROOT,'',str(myfile.name).replace('"','')),'wb') 
+
+		# 写入
+		for chunk in myfile.chunks():
+			f.write(chunk)
+		f.close()
+
+		return Response({'filename':str(myfile.name).replace('"','')})
+
+
+
+
+
 # 建立新浪回调方法
 def wb_back(request):
 	#接收参数
