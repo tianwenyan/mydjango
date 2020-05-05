@@ -39,7 +39,8 @@ import redis
 
 #导入时间模块
 import time
-
+import base64
+import hmac
 #导入公共目录变量
 from mydjango.settings import BASE_DIR
 
@@ -52,6 +53,7 @@ import uuid
 
 from myapp.models import User
 import re
+import cv2
 
 def is_phone(phone):
     phone_pat = re.compile('^(13\d|14[5|7]|15\d|166|17[3|6|7]|18\d)\d{8}$')
@@ -70,14 +72,27 @@ port = 6379
 r = redis.Redis(host=host,port=port)
 
 
+# 七牛云token
+from qiniu import Auth
+class QiNiu(APIView):
+	def get(self,request):
+		# 声明认证对象
+		q = Auth('sxgt21EG4WJyqEmzHvEbZ3Ltl1GATlgJFoLw0g6Q','FFO0XaOWASyvg_HxTriIEo8ymcYC50z9aFxyJG18')
+
+		token = q.upload_token('twy')
+
+		return Response({'token':token})
+
+
+
 # 文件上传通用类
 class UploadFile(APIView):
 	def post(self,request):
 
 		# 接收参数
 		myfile = request.FILES.get('file')
+		uid = request.POST.get('uid',None)
 
-		
 		
 		# 建立文件流对象 定义写文件路径
 		f = open(os.path.join(UPLOAD_ROOT,'',str(myfile.name).replace('"','')),'wb') 
@@ -86,12 +101,35 @@ class UploadFile(APIView):
 		for chunk in myfile.chunks():
 			f.write(chunk)
 		f.close()
+		
+		user = User.objects.get(id=int(uid))
+		user.img = myfile.name.replace('"','')
 
 		return Response({'filename':str(myfile.name).replace('"','')})
 
 
 
 
+#构造钉钉回调方法
+def ding_back(request):
+
+    #获取code
+    code = request.GET.get("code")
+
+    t = time.time()
+    #时间戳
+    timestamp = str((int(round(t * 1000))))
+    appSecret ='ly-AzMKMmCKQP3geaILT_An32kEfKO3HeOtApy5CgKwjytevVZC0WYsT2gxMB160'
+    #构造签名
+    signature = base64.b64encode(hmac.new(appSecret.encode('utf-8'),timestamp.encode('utf-8'), digestmod=sha256).digest())
+    #请求接口，换取钉钉用户名
+    payload = {'tmp_auth_code':code}
+    headers = {'Content-Type': 'application/json'}
+    res = requests.post('https://oapi.dingtalk.com/sns/getuserinfo_bycode?signature='+urllib.parse.quote(signature.decode("utf-8"))+"&timestamp="+timestamp+"&accessKey=dingoaukgkwqknzjvamdqh",data=json.dumps(payload),headers=headers)
+
+    res_dict = json.loads(res.text)
+    print(res_dict)
+    return HttpResponse(res.text)
 
 # 建立新浪回调方法
 def wb_back(request):
@@ -140,6 +178,7 @@ def wb_back(request):
 
 
 	return HttpResponse('回调成功')
+
 
 
 
