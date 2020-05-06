@@ -71,6 +71,31 @@ port = 6379
 #建立redis连接
 r = redis.Redis(host=host,port=port)
 
+# 又拍云存储
+import upyun
+class UpYun(APIView):
+	def post(self,request):
+		# 获取文件
+		file = request.FILES.get('file')
+		# 新建又拍云实例
+		up = upyun.UpYun('tianwenyan','twy','vOptTLkbmTJ31F7iaf9zVAEJ4sG1Wc1x')
+		# 声明头部信息
+		headers = {'x-gmkerl-rotate':'auto'}
+		# 上传图片
+		for chunk in file.chunks():
+			res = up.put('/uotun_test.txt',chunk,checksum=True, need_resume=True, headers=headers)
+			
+		return Response({'filename':file.name})
+
+
+
+
+
+
+
+
+
+
 
 # 七牛云token
 from qiniu import Auth

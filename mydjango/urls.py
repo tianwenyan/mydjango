@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path,re_path
 from django.views.static import serve
 from myapp.views import myindex
-from myapp.md_user import Register,Login,MyCode,wb_back,UploadFile,QiNiu,ding_back
+from myapp.md_user import Register,Login,MyCode,wb_back,UploadFile,QiNiu,ding_back,UpYun
 from myapp.my_user1 import Register1,Login1
 
 urlpatterns = [
@@ -33,5 +33,6 @@ urlpatterns = [
     path('upload/',UploadFile.as_view()),
     path('qiniu/',QiNiu.as_view()),
     path('login1/',Login.as_view()),
+    path('upyun/',UpYun.as_view()),
 
 ]
