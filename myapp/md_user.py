@@ -88,15 +88,6 @@ class UpYun(APIView):
 		return Response({'filename':file.name})
 
 
-
-
-
-
-
-
-
-
-
 # 七牛云token
 from qiniu import Auth
 class QiNiu(APIView):
@@ -108,6 +99,23 @@ class QiNiu(APIView):
 
 		return Response({'token':token})
 
+
+
+# 获取用户信息接口
+class UserInfo(APIView):
+	def get(self,request):
+
+		# 接收参数
+		uid = request.GET.get('uid',None)
+
+		# 查询数据库
+		user = User.objects.get(id=int(uid))
+
+		if user.img == "":
+			user.img = 'sina.png'
+
+		# 返回
+		return Response({'img':user.img,'phone':user.phone})
 
 
 # 文件上传通用类
