@@ -55,6 +55,26 @@ from myapp.models import User
 import re
 import cv2
 
+from django.utils.deprecation import MiddlewareMixin
+
+# 自定义中间件
+class MyMiddleware(MiddlewareMixin):
+	def process_request(self,request):
+		# print('过滤中间件')
+		pass
+
+		# 获取路由
+		# if request.path_info.startwith('/userinfo'):
+		# 	return JsonResponse({'message':})
+		# return HttpResponse(json.dumps({'messsage':'您篡改了uid'},ensure_ascii=False,indent=4))
+	
+	def process_view(self,request,view_func,view_args,view_kwargs):
+		pass
+	def process_exception(self,request,exceponse):
+		pass
+	def process_response(self,request,response):
+		return response
+
 def is_phone(phone):
     phone_pat = re.compile('^(13\d|14[5|7]|15\d|166|17[3|6|7]|18\d)\d{8}$')
     res = re.search(phone_pat, phone)
