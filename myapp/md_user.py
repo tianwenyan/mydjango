@@ -51,11 +51,27 @@ from django.db.models import Q,F
 from dwebsocket.decorators import accept_websocket
 import uuid
 
-from myapp.models import User
+from myapp.models import User,Carousel
 import re
 import cv2
 
 from django.utils.deprecation import MiddlewareMixin
+
+from myapp.myser import CarouselSer
+
+# 轮播图后台接口
+class GetCarousel(APIView):
+	def get(self,request):
+
+		# 读库
+		carousels = Carousel.objects.all()
+
+		# 序列化操作
+		carousels_ser = CarouselSer(carousels,many=True)
+
+		return Response(carousels_ser.data)
+
+
 
 # 自定义中间件
 class MyMiddleware(MiddlewareMixin):

@@ -11,6 +11,17 @@ class Base(models.Model):
     class Meta:
         abstract = True
 
+# 轮播图
+class Carousel(Base):
+    name = models.CharField(max_length=200)
+    src = models.CharField(max_length=200)
+    img = models.CharField(max_length=200)
+
+    # 声明表名
+    class Meta:
+        db_table = 'carousel'
+
+
 # 用户表
 class User(Base):
     # 用户名

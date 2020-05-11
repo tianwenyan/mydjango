@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path,re_path
 from django.views.static import serve
 from myapp.views import myindex
-from myapp.md_user import Register,Login,MyCode,wb_back,UploadFile,QiNiu,ding_back,UpYun,UserInfo
+from myapp.md_user import Register,Login,MyCode,wb_back,UploadFile,QiNiu,ding_back,UpYun,UserInfo,GetCarousel
 from myapp.my_user1 import Register1,Login1
 
 urlpatterns = [
@@ -35,5 +35,6 @@ urlpatterns = [
     path('login1/',Login.as_view()),
     path('upyun/',UpYun.as_view()),
     path('userinfo/',UserInfo.as_view()),
+    path('GetCarousel/',GetCarousel.as_view()),
 
 ]
