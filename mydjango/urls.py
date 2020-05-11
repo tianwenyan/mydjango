@@ -19,6 +19,8 @@ from django.views.static import serve
 from myapp.views import myindex
 from myapp.md_user import Register,Login,MyCode,wb_back,UploadFile,QiNiu,ding_back,UpYun,UserInfo,GetCarousel
 from myapp.my_user1 import Register1,Login1
+from myapp.md_goods import InsertGoods,CategoryList
+
 
 urlpatterns = [
     #定义超链接路由
@@ -36,5 +38,7 @@ urlpatterns = [
     path('upyun/',UpYun.as_view()),
     path('userinfo/',UserInfo.as_view()),
     path('GetCarousel/',GetCarousel.as_view()),
+    path('insertgoods/',InsertGoods.as_view()),
+    path('categorylist/',CategoryList.as_view()),
 
 ]

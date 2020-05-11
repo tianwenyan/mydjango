@@ -11,6 +11,31 @@ class Base(models.Model):
     class Meta:
         abstract = True
 
+# 商品类别表
+class Category(Base):
+    name = models.CharField(max_length=200)
+    
+    
+
+    class Meta:
+        db_table = 'category'
+
+# 商品表
+class Goods(Base):
+    name = models.CharField(max_length=200)
+    src = models.CharField(max_length=200)
+    img = models.CharField(max_length=200)
+    video = models.CharField(max_length=200)
+    price = models.IntegerField()
+    # 规格
+    params = models.CharField(max_length=200)
+    # 关注数
+    flows = models.IntegerField(default=0,null=True)
+    cid = models.IntegerField(default=0,null=True)
+
+    class Meta:
+        db_table = 'goods'
+
 # 轮播图
 class Carousel(Base):
     name = models.CharField(max_length=200)
