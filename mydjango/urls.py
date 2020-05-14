@@ -19,7 +19,7 @@ from django.views.static import serve
 from myapp.views import myindex
 from myapp.md_user import Register,Login,MyCode,wb_back,UploadFile,QiNiu,ding_back,UpYun,UserInfo,GetCarousel
 from myapp.my_user1 import Register1,Login1
-from myapp.md_goods import InsertGoods,CategoryList
+from myapp.md_goods import InsertGoods,CategoryList,GoodsList,GoodInfo
 
 
 urlpatterns = [
@@ -37,8 +37,10 @@ urlpatterns = [
     path('login1/',Login.as_view()),
     path('upyun/',UpYun.as_view()),
     path('userinfo/',UserInfo.as_view()),
-    path('GetCarousel/',GetCarousel.as_view()),
+    path('getcarousel/',GetCarousel.as_view()),
     path('insertgoods/',InsertGoods.as_view()),
     path('categorylist/',CategoryList.as_view()),
+    path('goodslist/',GoodsList.as_view()),
+    path('goodinfo/',GoodInfo.as_view()),
 
 ]
