@@ -23,7 +23,7 @@ class Category(Base):
 # 商品表
 class Goods(Base):
     name = models.CharField(max_length=200)
-    src = models.CharField(max_length=200)
+    desc = models.CharField(max_length=200)
     img = models.CharField(max_length=200)
     video = models.CharField(max_length=200)
     price = models.IntegerField()

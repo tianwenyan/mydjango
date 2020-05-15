@@ -82,6 +82,12 @@ class GoodsList(APIView):
 	def get(self,request):
 
 
+
+		#检索字段
+		text = request.GET.get('text',None)
+
+		print(text)
+
 		#排序字段
 		coloum = request.GET.get('coloum',None)
 
@@ -110,9 +116,16 @@ class GoodsList(APIView):
 
 			goods = Goods.objects.all()[data_start:data_end]
 
+		#判断是否进行模糊查询
+		if text:
 
-		#查询所有商品个数
-		count = Goods.objects.count()
+			goods = Goods.objects.filter(Q(name__contains=text) | Q(desc__contains=text) )[data_start:data_end]
+
+			count = Goods.objects.filter(Q(name__contains=text) | Q(desc__contains=text)).count()
+		else:
+
+			#查询所有商品个数
+			count = Goods.objects.count()
 
 		#序列化
 		goods_ser = GoodsSer(goods,many=True)
