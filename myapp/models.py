@@ -10,13 +10,21 @@ class Base(models.Model):
 
     class Meta:
         abstract = True
+# 评论表
+class Comment(Base):
+    uid = models.IntegerField()
+    # 评论内容
+    content = models.CharField(max_length=400)
+    gid = models.IntegerField()
+
+    # 声明表明
+    class Meta:
+        db_table = 'comment'
 
 # 商品类别表
 class Category(Base):
     name = models.CharField(max_length=200)
     
-    
-
     class Meta:
         db_table = 'category'
 

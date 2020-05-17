@@ -57,7 +57,23 @@ import cv2
 
 from django.utils.deprecation import MiddlewareMixin
 
-from myapp.myser import CarouselSer,CategorySer,GoodsSer
+from myapp.myser import CarouselSer,CategorySer,GoodsSer,CommentSer
+
+#商品评论
+class CommentInsert(APIView):
+
+	def post(self,request):
+
+		#初始化参数
+		comment = CommentSer(data=request.data)
+
+		#验证字段
+		if comment.is_valid():
+
+			#进行入库
+			comment.save()
+
+		return Response({'code':200,'message':'评论成功'})
 
 
 # 商品详情页
@@ -75,6 +91,52 @@ class GoodInfo(APIView):
 
         return Response(good_ser.data)
 
+#搜索接口
+class Search(APIView):
+
+	def get(self,request):
+
+		#检索字段
+		text = request.GET.get('text',None)
+
+		#转换数据类型
+		text = json.loads(text)
+
+
+		sql = ""
+		#动态拼接
+		for val in text:
+			sql += "or name like '%%%s%%' " % val
+
+		sql = sql.lstrip("or")
+
+		sql_cursor = "select name,id,img,price from goods where id != 0 and ( " + sql + ")"
+
+		#建立游标对象
+		cursor = connection.cursor()
+
+		#执行sql
+		cursor.execute(sql_cursor)
+
+		#查询
+		#result_tuple = cursor.fetchall()
+		result = dictfetch(cursor)
+
+
+		return Response({'data':result})
+
+
+# 格式化结果集
+def dictfetch(cursor):
+
+	# 声明描述符
+	desc = cursor.description
+
+	return [ dict( zip([col[0] for col in desc],row ))
+
+			for row in cursor.fetchall()
+
+	 ]
 
 #商品列表页
 class GoodsList(APIView):

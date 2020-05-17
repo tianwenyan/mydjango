@@ -392,9 +392,7 @@ class Register(APIView):
 		username = request.GET.get('username','null')
 		password = request.GET.get('password','null')
 		phone = request.GET.get('phone','null')
-
-        
-		
+	
 		#排重
 		user = User.objects.filter(username=username).first()
 
@@ -404,7 +402,7 @@ class Register(APIView):
 			res['message'] = '该用户名已存在'
 			return Response(res)
 
-		#入库
+		#入库,
 		user = User(username=username,password=make_password(password),phone=is_phone(phone))
 		user.save()
 
