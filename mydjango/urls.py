@@ -19,7 +19,7 @@ from django.views.static import serve
 from myapp.views import myindex
 from myapp.md_user import Register,Login,MyCode,wb_back,UploadFile,QiNiu,ding_back,UpYun,UserInfo,GetCarousel
 from myapp.my_user1 import Register1,Login1
-from myapp.md_goods import InsertGoods,CategoryList,GoodsList,GoodInfo,Search,CommentInsert,CommentList
+from myapp.md_goods import InsertGoods,CategoryList,GoodsList,GoodInfo,Search,CommentInsert,CommentList,MongoPost
 
 
 urlpatterns = [
@@ -45,5 +45,6 @@ urlpatterns = [
     path('search/',Search.as_view()),
     path('commentinsert/',CommentInsert.as_view()),
     path('commentlist/',CommentList.as_view()),
+    path('mongopost/',MongoPost.as_view()),
 
 ]
