@@ -51,7 +51,7 @@ from django.db.models import Q,F
 from dwebsocket.decorators import accept_websocket
 import uuid
 
-from myapp.models import User,Carousel,Goods,Category
+from myapp.models import User,Carousel,Goods,Category,Comment
 import re
 import cv2
 
@@ -59,10 +59,53 @@ from django.utils.deprecation import MiddlewareMixin
 
 from myapp.myser import CarouselSer,CategorySer,GoodsSer,CommentSer
 
+
+import redis
+
+#定义地址和端口
+host = '127.0.0.1'
+port = 6379
+
+
+#建立redis连接
+r = redis.Redis(host=host,port=port)
+
+# 评论列表接口
+class CommentList(APIView):
+	def get(self,request):
+
+		gid = request.GET.get('gid',None)
+
+		# 查询数据
+		comments = Comment.objects.filter(gid=gid).order_by('-id')
+
+		# 序列化
+		comment_ser = CommentSer(comments,many=True)
+
+		return Response(comment_ser.data)
+
+
 #商品评论
 class CommentInsert(APIView):
 
 	def post(self,request):
+
+		#获取客户端ip
+		if 'HTTP_X_FORWARDED_FOR' in request.META:
+
+			ip = request.META.get('HTTP_X_FORWARDED_FOR')
+
+		else:
+
+			ip = request.META.get('REMOTE_ADDR')
+
+
+		#if r.get(ip):
+
+		if r.llen(ip) > 3:
+
+			return Response({'code':403,'message':'您评论的过快，请歇一歇'})
+
 
 		#初始化参数
 		comment = CommentSer(data=request.data)
@@ -73,8 +116,13 @@ class CommentInsert(APIView):
 			#进行入库
 			comment.save()
 
-		return Response({'code':200,'message':'评论成功'})
+			#设置评论间隔时间
+			#r.set(ip,"123")
+			
+			r.lpush(ip,1)
+			r.expire(ip,30)
 
+		return Response({'code':200,'message':'评论成功'})
 
 # 商品详情页
 class GoodInfo(APIView):
