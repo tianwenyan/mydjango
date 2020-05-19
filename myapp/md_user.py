@@ -57,7 +57,19 @@ import cv2
 
 from django.utils.deprecation import MiddlewareMixin
 
-from myapp.myser import CarouselSer
+from myapp.myser import CarouselSer,UserSer
+
+# 脱敏操作
+class GetUsers(View):
+
+	def get(self,request):
+
+		users = User.objects.filter().values('id','username')
+
+		users = list(users)
+
+		return JsonResponse(users,safe=False,json_dumps_params={'ensure_ascii':False})
+
 
 # 轮播图后台接口
 class GetCarousel(APIView):

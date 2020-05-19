@@ -55,7 +55,7 @@ from myapp.models import User,Carousel,Goods,Category,Comment
 import re
 import cv2
 
-import pymongo
+# import pymongo
 
 from django.utils.deprecation import MiddlewareMixin
 
@@ -72,35 +72,40 @@ port = 6379
 #建立redis连接
 r = redis.Redis(host=host,port=port)
 
+
+
+
+
+
 #存入mongo数据库
-class MongoPost(APIView):
-    conn = pymongo.MongoClient()
-    db = conn.pinglun
-    table = db.talk
+# class MongoPost(APIView):
+#     conn = pymongo.MongoClient()
+#     db = conn.pinglun
+#     table = db.talk
 
-    def post(self,request):
-        username = request.data.get('username')
-        print('用户名',username)
-        content = request.data.get('content')
-        print('评论内容',content)
-        if username and content:
-            self.table.insert_one({'username':username,'content':content})
-        return Response({'code':200,'message':'mongo评论成功'})
+#     def post(self,request):
+#         username = request.data.get('username')
+#         print('用户名',username)
+#         content = request.data.get('content')
+#         print('评论内容',content)
+#         if username and content:
+#             self.table.insert_one({'username':username,'content':content})
+#         return Response({'code':200,'message':'mongo评论成功'})
 
-    def get(self,request):
-        a = self.table.find({})
-        alist = []
-        for i in a:
-            resp = {}
-            username = i['username']
-            content = i['content']
-            resp['username'] = username
-            resp['content'] = content
-            alist.append((resp))
-        print(111,alist)
+    # def get(self,request):
+    #     a = self.table.find({})
+    #     alist = []
+    #     for i in a:
+    #         resp = {}
+    #         username = i['username']
+    #         content = i['content']
+    #         resp['username'] = username
+    #         resp['content'] = content
+    #         alist.append((resp))
+    #     print(111,alist)
         # alist = sorted(alist,key=lambda x:x['_id'],reverse=True)
 
-        return Response({'code':200,'data':alist})
+        # return Response({'code':200,'data':alist})
         # return Response({'code':200})
 
 # 评论列表接口

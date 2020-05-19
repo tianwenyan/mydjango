@@ -2,8 +2,15 @@
 from rest_framework import serializers
 
 # 导入需要序列化的表
-from myapp.models import Carousel,Goods,Category,Comment
+from myapp.models import Carousel,Goods,Category,Comment,User
 
+
+#建立序列化类
+class UserSer(serializers.ModelSerializer):
+
+	class Meta:
+		model = User
+		fields = "__all__"
 
 #建立序列化类
 class CommentSer(serializers.ModelSerializer):
